@@ -1,0 +1,56 @@
+that i have this i begin to do some
+research what stack do i want to use
+what frameworks front-end framework
+back-end do i need a database maybe an
+external api to pull in some data data
+data whatever needs to be a part of this
+i do all the research to get an idea of
+4:43
+
+LANGUAGES
+LAYOUT?
+FLOW?
+STACK?
+STORAGE?
+FOLDER SETUP?
+WORKFLOW (github?)
+WORKING ROUTINES?
+HOW ARE WE MAINTAINING CONTROL OF OUR PROJECT THROUGH OUR GITHUB REPOSITORY?
+(when using git save, we should always save all by using command "git add .")
+(^we then use git commit -m, the -m stands for message)
+(^ then use git checkout {hashcode}, to go back to old state- timetravel)
+In summary, *git add* is used to stage changes,
+ while *git commit* is used to create a new commit that includes the staged changes.
+
+****************************************
+how to setup git
+in file dir:
+		git init
+		git remote add origin http....
+		(make sure theres a "main", branch > git branch main)
+		git push -u  origin main(or master) > do this after every commit
+		(if going from github to local use git pull)
+		our .gitignore file has to be called as such
+$$$$$$$$$$$$$$$for some reason folders wont show up in github if they are empty$$$$$$$$$$$$$$$$$$$
+*********************************************
+git is up&running & .gitignore file working tambien
+
+CHECKIN- GITHUB MANAGER EVERY SESSION !!!
+
+ADOBE XD FOR WIREFRAMING & MOCKUPS
+DIA FOR WEB & SYSTEM DESIGN & UML DIAGRAMS (forrestknight video)
+
+
+we want a full stack web app
+
+
+get boilerplate 1st
+we want data from insta to populate our app
+we want to store this data somehow
+we want to bring this data to the front end
+
+you should start with login/signup, (flow order) as thats where users start
+
+
+what is our MVP (Minimal Viable Product)
+
