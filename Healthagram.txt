@@ -39,7 +39,7 @@ CHECKIN- GITHUB MANAGER EVERY SESSION !!!
 
 ADOBE XD FOR WIREFRAMING & MOCKUPS
 DIA FOR WEB & SYSTEM DESIGN & UML DIAGRAMS (forrestknight video)
-
+***beware with installing node modules/ may not be correct versoin or compatable
 
 we want a full stack web app
 
