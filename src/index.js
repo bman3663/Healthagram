@@ -1,9 +1,25 @@
 const express = require("express");
 const app = express();
+const path = require("path")
+const mongoose = require('mongoose');
+mongoose.connect('mongodb://127.0.0.1:27017/postDB', { useNewUrlParser: true, useUnifiedTopology: true });
+
 app.set("view engine", "ejs")
 
+// app.set("views", path.join(__dirname, "/views")) 
+
+app.set("views", path.join(__dirname, "/views")) 
+
+// ^^^^ above code sus!!!
+console.log(__dirname)
+
+console.log()
+
+
 app.get("/", (req, res) => {
-    res.render("../../views/home.ejs")
+        res.render("home.ejs")
+        // res.render("../../views/home.ejs")
+
 })
 
 app.get("/login", (req, res) => {
