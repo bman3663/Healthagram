@@ -2,8 +2,17 @@ const express = require("express");
 const app = express();
 const path = require("path")
 const mongoose = require('mongoose');
-mongoose.connect('mongodb://127.0.0.1:27017/postDB', { useNewUrlParser: true, useUnifiedTopology: true });
+console.log("ops")
+mongoose.connect('mongodb://127.0.0.1:27017/postDB', { useNewUrlParser: true, useUnifiedTopology: true })
+.then(() => {
+    console.log("CONNECTION OPEN!!!")
 
+})
+.catch(err => {
+    console.log("OH NO ERROR!!!")
+    console.log(err)
+})
+// ************************************ not the file connected to terminal// not updating
 app.set("view engine", "ejs")
 
 // app.set("views", path.join(__dirname, "/views")) 
@@ -11,7 +20,7 @@ app.set("view engine", "ejs")
 app.set("views", path.join(__dirname, "/views")) 
 
 // ^^^^ above code sus!!!
-console.log(__dirname)
+console.log("dinner")
 
 console.log()
 
@@ -42,7 +51,7 @@ app.get("/search", (req, res) => {
 
 
 app.get("*", (req, res) => {
-    res.send("last case scenario")
+    res.send("last cased scenario")
 })
 
 
