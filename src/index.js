@@ -52,9 +52,15 @@ app.get("/search", (req, res) => {
 
 app.get("/posts", async (req, res) => {
     const posts = await Post.find({});
-    console.log(posts)
-    res.render("gallery", { posts })
+    res.render("posts/gallery", { posts } )
 })
+
+app.get("/posts/:id", async (req, res) => {
+    const post = await Post.findById(req.params.id)
+    res.render("posts/select", {post})
+})
+
+
 
 app.get("*", (req, res) => {
     res.send("last cased scenario")
