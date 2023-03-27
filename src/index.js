@@ -2,7 +2,11 @@ const express = require("express");
 const app = express();
 const path = require("path")
 const mongoose = require('mongoose');
-console.log("ops")
+
+const Post = require("./model/post")
+console.info(Post)
+
+
 mongoose.connect('mongodb://127.0.0.1:27017/postDB', { useNewUrlParser: true, useUnifiedTopology: true })
 .then(() => {
     console.log("CONNECTION OPEN!!!")
@@ -15,14 +19,10 @@ mongoose.connect('mongodb://127.0.0.1:27017/postDB', { useNewUrlParser: true, us
 // ************************************ not the file connected to terminal// not updating
 app.set("view engine", "ejs")
 
-// app.set("views", path.join(__dirname, "/views")) 
 
 app.set("views", path.join(__dirname, "/views")) 
 
 // ^^^^ above code sus!!!
-console.log("dinner")
-
-console.log()
 
 
 app.get("/", (req, res) => {
@@ -49,6 +49,12 @@ app.get("/search", (req, res) => {
     res.send(`page the of user ${req.query.q}`)
 })
 
+
+app.get("/posts", async (req, res) => {
+    const posts = await Post.find({});
+    console.log(posts)
+    res.render("gallery", { posts })
+})
 
 app.get("*", (req, res) => {
     res.send("last cased scenario")

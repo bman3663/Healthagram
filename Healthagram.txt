@@ -54,3 +54,7 @@ you should start with login/signup, (flow order) as thats where users start
 
 what is our MVP (Minimal Viable Product)
 
+
+******ISSUE*****
+file only beign created in vscode, not file exp or terminal
+
