@@ -67,7 +67,7 @@ function randomNumber() {
 // const seeders = []
 
  const swiper = async () => {
- await  Post.deleteMany({})
+//  await  Post.deleteMany({})
  
  for (let i=0; i<20; i++) {
     // console.log(captions[i])
@@ -77,9 +77,9 @@ function randomNumber() {
         comments: comments[i]
     })        
     await seeder.save()
-
  }
  }
  swiper().then(() => {
     mongoose.connection.close();
+    console.log("done")
  })

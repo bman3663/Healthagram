@@ -6,7 +6,7 @@ const mongoose = require('mongoose');
 const Post = require("./model/post")
 console.info(Post)
 
-
+ 
 mongoose.connect('mongodb://127.0.0.1:27017/postDB', { useNewUrlParser: true, useUnifiedTopology: true })
 .then(() => {
     console.log("CONNECTION OPEN!!!")
@@ -22,8 +22,7 @@ app.set("view engine", "ejs")
 
 app.set("views", path.join(__dirname, "/views")) 
 
-// ^^^^ above code sus!!!
-
+app.use(express.urlencoded({ extended: true }))
 
 app.get("/", (req, res) => {
         res.render("home.ejs")
@@ -55,10 +54,23 @@ app.get("/posts", async (req, res) => {
     res.render("posts/gallery", { posts } )
 })
 
+app.get("/posts/create", (req, res) => {
+    res.render("posts/create")
+})
+
+app.post("/posts", async (req, res) => {
+    // res.send(req.body.post)
+    const post = new Post(req.body.post)
+    await post.save();
+    res.redirect(`posts/${post._id}`)
+
+})
+
 app.get("/posts/:id", async (req, res) => {
     const post = await Post.findById(req.params.id)
     res.render("posts/select", {post})
 })
+
 
 
 

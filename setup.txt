@@ -1,0 +1,1 @@
+run command "mongo" & "mongod" on 2 separate powershell windows to setup db properly

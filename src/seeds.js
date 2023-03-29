@@ -21,3 +21,4 @@ const post1 = new Post({
 })
 post1.save()
 console.log(post1)
+//*********DELETES EVERTHINGGGGGGGGG */
