@@ -9,10 +9,21 @@
 <body>
     <h1>All posts</h1>
 
-    <% for (let item of posts) { %>
-    <li></li>
-    <a href="/posts/<%= item._id  %>"><%= item.caption  %></a>
-    <% } %>
+    <div>
+        <ul>
+            <li><a href="/posts/create">Create A Post</a></li>
+            <li><a href="/posts/gallery">Goto Gallery</a></li>
+        </ul>  
+    </div>
+
+    
+    <div>
+        <ul>
+            <% for (let item of posts) { %>
+                <li><a href="/posts/<%= item._id  %>"><%= item.caption  %></a></li>
+            <% } %>
+        </ul>
+    </div>
 </body>
 </html>
 
