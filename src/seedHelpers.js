@@ -64,21 +64,38 @@ function randomNumber() {
   return Math.floor(Math.random() * 50) + 1;
 }
 
-// const seeders = []
 
  const swiper = async () => {
-//  await  Post.deleteMany({})
- 
- for (let i=0; i<20; i++) {
+ await  Post.deleteMany({})
+
+//  for (let i = 0; i < 20; i++) {
+//  for (let i = 0; i < 20 ; i++) {
     // console.log(captions[i])
-    const seeder = new Post({
+    // const seeder = new Post({
+        // caption: captions[i],
+//         likes: randomNumber(),
+// //         comments: comments[i]
+//     })        
+// *********testcode******
+for (let i = 0; i < 20; i++) {
+  // Your code 
+  const seeder = new Post({
         caption: captions[i],
         likes: randomNumber(),
         comments: comments[i]
-    })        
+
+    }) 
     await seeder.save()
+    // seeder.save()
+
+}
+
+    
+// *********testcode******
+//  }
  }
- }
+
+ 
  swiper().then(() => {
     mongoose.connection.close();
     console.log("done")
