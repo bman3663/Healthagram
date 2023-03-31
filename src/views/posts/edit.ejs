@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Edit your post</h1>
+    
+    <div>
+        <ul>
+            <li><a href="/posts/<%= post._id %>">Show Selected Post</a></li>
+            <li><a href="/posts">Goto Gallery</a></li>
+        </ul>  
+    </div>
+    <div>
+        <form action="/posts/<%= post._id %>?_method=PUT" method="post">
+            <label for="description">Describe pic</label><br>
+            <input type="text" id="description" name="post[description]" value="<%= post.description %>"><br>
+            <label for="caption">Caption Your Post</label><br>
+            <input type="text" id="caption" name="post[caption]" value="<%= post.caption %>">
+            <input type="submit" value="Edit post">
+    </form>
+
+    </div>
+</body>
+</html>

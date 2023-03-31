@@ -2,7 +2,7 @@ const express = require("express");
 const app = express();
 const path = require("path")
 const mongoose = require('mongoose');
-
+const methodOverride = require("method-override")
 const Post = require("./model/post")
 console.info(Post)
 
@@ -23,6 +23,7 @@ app.set("view engine", "ejs")
 app.set("views", path.join(__dirname, "/views")) 
 
 app.use(express.urlencoded({ extended: true }))
+app.use(methodOverride("_method"));
 
 app.get("/", (req, res) => {
         res.render("home.ejs")
@@ -69,6 +70,25 @@ app.post("/posts", async (req, res) => {
 app.get("/posts/:id", async (req, res) => {
     const post = await Post.findById(req.params.id)
     res.render("posts/select", {post})
+})
+
+
+app.get("/posts/:id/edit", async (req, res) => {
+    const post = await Post.findById(req.params.id)
+    res.render("posts/edit", {post})
+})
+
+app.put("/posts/:id", async (req, res) => {
+    const { id } = req.params;
+    const post = await Post.findByIdAndUpdate(id, { ...req.body.post});
+    res.redirect(`/posts/${post._id}`) 
+})
+
+
+app.delete("/posts/:id", async (req, res) => {
+    const { id } = req.params;
+    await Post.findByIdAndDelete(id)
+    res.redirect(`/posts`) 
 })
 
 
