@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const path = require("path")
 const mongoose = require('mongoose');
+const ejsMate = require("ejs-mate")
 const methodOverride = require("method-override")
 const Post = require("./model/post")
 console.info(Post)
@@ -17,6 +18,7 @@ mongoose.connect('mongodb://127.0.0.1:27017/postDB', { useNewUrlParser: true, us
     console.log(err)
 })
 // ************************************ not the file connected to terminal// not updating
+app.engine("ejs", ejsMate)
 app.set("view engine", "ejs")
 
 
@@ -33,12 +35,12 @@ app.get("/", (req, res) => {
 
 app.get("/login", (req, res) => {
     console.log("login page request")
-    res.send("login html page")
+    res.render("login")
 })
 
 app.get("/signup", (req, res) => {
     console.log("signup page request")
-    res.send("signup html page")
+    res.render("signup")
 })
 
 app.get("/user/:username", (req, res) => {
