@@ -10,10 +10,31 @@
     </div>
 
     
-    <div>
+    <div  class="mx-auto" style="width: 200px;">
         <ul>
             <% for (let item of posts) { %>
-                <li><a href="/posts/<%= item._id  %>"><%= item.caption  %></a></li>
+                <li>
+                
+                                    
+                    <div class="card" style="width: 18rem;">
+                    <img class="card-img-top" src="<%= item.image  %>" alt="Card image cap">
+                    <div class="card-body">
+                        <h5 class="card-title"><%= item.caption  %></h5>
+                        <p class="card-text">
+                            <ul>
+                            <% for (let comment of item.comments) { %>
+                                        <li><%= comment  %></li>
+                            <% } %>  
+                            </ul>  
+                        </p>
+                        <a href="/posts/<%= item._id  %>"" class="btn btn-primary">select</a>
+                    </div>
+                    </div>
+                
+                </li>
             <% } %>
+
+
         </ul>
     </div>
+

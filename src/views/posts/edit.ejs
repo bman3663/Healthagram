@@ -9,12 +9,14 @@
         </ul>  
     </div>
     <div>
-        <form action="/posts/<%= post._id %>?_method=PUT" method="post">
+        <form action="/posts/<%= post._id %>?_method=PUT" method="post"><br>
             <label for="description">Describe pic</label><br>
             <input type="text" id="description" name="post[description]" value="<%= post.description %>"><br>
             <label for="caption">Caption Your Post</label><br>
-            <input type="text" id="caption" name="post[caption]" value="<%= post.caption %>">
+            <input type="text" id="caption" name="post[caption]" value="<%= post.caption %>"><br>
+            <label for="image">Insert image URL</label><br>
+            <input type="text" id="image" name="post[image]" value="<%= post.image %>"><br>
             <input type="submit" value="Edit post">
-    </form>
+        </form>
 
     </div>
