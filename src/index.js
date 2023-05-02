@@ -2,7 +2,10 @@ const express = require("express");
 const app = express();
 const path = require("path")
 const mongoose = require('mongoose');
-const ejsMate = require("ejs-mate")
+const ejsMate = require("ejs-mate");
+const {postJoiSchema} = require("./schemas")
+const catchAsync = require("./utilities/catchAsync")
+const ExpressError = require("./utilities/ExpressError")
 const methodOverride = require("method-override")
 const Post = require("./model/post")
 console.info(Post)
@@ -26,6 +29,22 @@ app.set("views", path.join(__dirname, "/views"))
 
 app.use(express.urlencoded({ extended: true }))
 app.use(methodOverride("_method"));
+
+// Server-Side JOI validation middleware
+const validatePost = (req, res, next) => {
+    const {error} = postJoiSchema.validate(req.body);
+
+    if (error) {
+        const msg = error.details.map(el => el.message).join(",")
+        throw new ExpressError(msg, 400)
+    }
+    else {
+        next();
+    }
+} 
+
+
+
 
 app.get("/", (req, res) => {
         res.render("home.ejs")
@@ -61,45 +80,57 @@ app.get("/posts/create", (req, res) => {
     res.render("posts/create")
 })
 
-app.post("/posts", async (req, res) => {
+app.post("/posts", validatePost, catchAsync(async (req, res) => {
     // res.send(req.body.post)
+    
     const post = new Post(req.body.post)
     await post.save();
     res.redirect(`posts/${post._id}`)
 
-})
+}))
 
-app.get("/posts/:id", async (req, res) => {
+app.get("/posts/:id", catchAsync(async (req, res) => {
     const post = await Post.findById(req.params.id)
     res.render("posts/select", {post})
-})
+}))
 
 
-app.get("/posts/:id/edit", async (req, res) => {
+app.get("/posts/:id/edit", catchAsync(async (req, res) => {
     const post = await Post.findById(req.params.id)
     res.render("posts/edit", {post})
-})
+}))
 
-app.put("/posts/:id", async (req, res) => {
+app.put("/posts/:id", validatePost, catchAsync(async (req, res) => {
     const { id } = req.params;
     const post = await Post.findByIdAndUpdate(id, { ...req.body.post});
     res.redirect(`/posts/${post._id}`) 
-})
+}))
 
 
-app.delete("/posts/:id", async (req, res) => {
+app.delete("/posts/:id", catchAsync(async (req, res) => {
     const { id } = req.params;
     await Post.findByIdAndDelete(id)
     res.redirect(`/posts`) 
+}))
+
+
+
+
+app.all("*", (req, res, next) => {
+    // res.send("404")
+    next(new ExpressError("Page Not Found!", 404))
+
 })
 
 
+app.use((err, req, res, next) => {
+    // res.send("OH NOOOOOOOOO!!!!!! SOMEONE MESSED UP")
+    const { statusCode = 500} = err;
+    if (!err.message) err.message = "Something went wrong [default]"
+    res.status(statusCode).render("error", { err })
 
-
-app.get("*", (req, res) => {
-    res.send("last cased scenario")
+    // res.render("errer.ejs")
 })
-
 
 app.listen(3000, () => {
     console.log("Serving on port 3000")

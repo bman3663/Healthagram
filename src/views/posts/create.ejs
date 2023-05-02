@@ -13,12 +13,15 @@
     <div>
         <form action="/posts" method="post">
             <label for="description">Describe pic</label><br>
-            <input type="text" id="description" name="post[description]"><br>
+            <input type="text" id="description" name="post[description]" required><br>
             <label for="caption">Caption Your Post</label><br>
-            <input type="text" id="caption" name="post[caption]"><br>
+            <input type="text" id="caption" name="post[caption]" required><br>
             <label for="image">Insert image URL</label><br>
-            <input type="text" id="image" name="post[image]" ><br>
+            <input type="text" id="image" name="post[image]" required><br>
             
+            <label for="likes">how many likes (beta)</label><br>
+            <input type="text" id="likes" name="post[likes]" required><br>
+
             <input type="submit" value="Submit">
     </form>
 
