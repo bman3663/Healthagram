@@ -26,13 +26,24 @@
     <h2>Comments</h2>
     <ul>
     <% for (let comment of post.comments) { %>
-                <li><%= comment  %></li>
+                <li><%= comment.text  %></li>
     <% } %>
     </ul>
     </div>
     <div>
     <h2>Image</h2>
     <img src="<%= post.image %>" alt="">
+    </div>
+    <div>
+        <form action="/posts/<%= post._id %>/comment" method="post">
+
+            <label for="comment">leave a comment!</label><br>
+            <!-- <input type="text" id="comment" name="comment"><br> -->
+            <textarea class="form-control" id="comment" rows="3" name="comment[text]" required></textarea><br>
+
+
+            <input type="submit" value="Submit">
+        </form>
     </div>
 
     

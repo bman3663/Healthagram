@@ -6,3 +6,11 @@
             image: Joi.string().required()
         }).required()
     })
+
+
+    module.exports.commentJoiSchema = Joi.object({
+        comment: Joi.object({
+            text: Joi.string().required(),
+        }).required()
+    })
+

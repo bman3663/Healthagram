@@ -168,12 +168,28 @@ console.log(typeof(sigmaList))
 
 const swiper = async () => {
 
+  // for (const prop of sigmaList) {
+  //   // console.log(prop);
+  //   const sigmaSeed = new Post(prop)
+  //     await sigmaSeed.save()
+  // }
+
   for (const prop of sigmaList) {
     // console.log(prop);
-    const sigmaSeed = new Post(prop)
+    const sigmaSeed = new Post({
+       description: prop.description,
+      caption: prop.caption,
+      likes: prop.likes,
+      image: prop.image
+    })
       await sigmaSeed.save()
   }
+
+
+
 }
+
+
 
 swiper().then(() => {
   mongoose.connection.close();
