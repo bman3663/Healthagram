@@ -24,7 +24,6 @@ mongoose.connect('mongodb://127.0.0.1:27017/postDB', { useNewUrlParser: true, us
 app.engine("ejs", ejsMate)
 app.set("view engine", "ejs")
 
-
 app.set("views", path.join(__dirname, "/views")) 
 
 app.use(express.urlencoded({ extended: true }))
@@ -42,9 +41,6 @@ const validatePost = (req, res, next) => {
         next();
     }
 } 
-
-
-
 
 app.get("/", (req, res) => {
         res.render("home.ejs")
@@ -81,19 +77,16 @@ app.get("/posts/create", (req, res) => {
 })
 
 app.post("/posts", validatePost, catchAsync(async (req, res) => {
-    // res.send(req.body.post)
     
     const post = new Post(req.body.post)
     await post.save();
     res.redirect(`posts/${post._id}`)
-
 }))
 
 app.get("/posts/:id", catchAsync(async (req, res) => {
     const post = await Post.findById(req.params.id)
     res.render("posts/select", {post})
 }))
-
 
 app.get("/posts/:id/edit", catchAsync(async (req, res) => {
     const post = await Post.findById(req.params.id)
@@ -113,23 +106,16 @@ app.delete("/posts/:id", catchAsync(async (req, res) => {
     res.redirect(`/posts`) 
 }))
 
-
-
-
 app.all("*", (req, res, next) => {
     // res.send("404")
     next(new ExpressError("Page Not Found!", 404))
-
 })
 
 
 app.use((err, req, res, next) => {
-    // res.send("OH NOOOOOOOOO!!!!!! SOMEONE MESSED UP")
     const { statusCode = 500} = err;
     if (!err.message) err.message = "Something went wrong [default]"
     res.status(statusCode).render("error", { err })
-
-    // res.render("errer.ejs")
 })
 
 app.listen(3000, () => {
