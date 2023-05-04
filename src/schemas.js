@@ -10,7 +10,8 @@
 
     module.exports.commentJoiSchema = Joi.object({
         comment: Joi.object({
-            text: Joi.string().required(),
+            text: Joi.string().required()
+            // text: Joi.number().required()
         }).required()
     })
 

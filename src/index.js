@@ -8,7 +8,8 @@ const catchAsync = require("./utilities/catchAsync")
 const ExpressError = require("./utilities/ExpressError")
 const methodOverride = require("method-override")
 const Post = require("./model/post")
-const Comment = require("./model/comment")
+const Comment = require("./model/comment");
+const { comments } = require("./seeds/seedResources");
 console.info(Post)
 
  
@@ -52,6 +53,7 @@ const validateComments = (req, res, next) => {
     if (error) {
         const msg = error.details.map(el => el.message).join(",")
         throw new ExpressError(msg, 400)
+        // res.send(error)
     }
     else {
         next();
@@ -102,7 +104,8 @@ app.post("/posts", validatePost, catchAsync(async (req, res) => {
 }))
 
 app.get("/posts/:id", catchAsync(async (req, res) => {
-    const post = await Post.findById(req.params.id)
+    const post = await Post.findById(req.params.id).populate("comments")
+    // console.log(post.comments)
     // experiment
         // const comments = await Comment.findById(post)
 
@@ -129,13 +132,32 @@ app.delete("/posts/:id", catchAsync(async (req, res) => {
 }))
 
 
-app.post("/posts/:id/comment", validateComments, catchAsync(async (req, res) => {
+app.post("/posts/:id/comments", validateComments, catchAsync(async (req, res) => {
     const post = await Post.findById(req.params.id)
     const comment = new Comment(req.body.comment)
     post.comments.push(comment)
     await comment.save()
     await post.save()
+    // console.log(comment.text)
     res.redirect(`/posts/${post._id}`)
+}))
+
+// app.delete("/posts/:id/comments/:commentId", catchAsync(async (req, res) => {   
+//     const { id, commentId } = req.params
+//     await Post.findByIdAndUpdate(id, {$pull: {comments: commentId}})
+//     await Comment.findByIdAndDelete(commentId)
+
+//     res.redirect(`/posts/${id}`)
+// }))
+
+app.delete("/posts/:id/comments/:commentId", catchAsync(async (req, res) => {
+    const { id, commentId } = req.params;
+    const apost = await Post.findById("64540ea021489eb4e0f4e524") 
+
+    await Post.findByIdAndUpdate(id, { $pull: { comments: commentId } });
+    await Comment.findByIdAndDelete(commentId);
+    res.redirect(`/posts/${id}`);
+    // res.send(`|${id} |${commentId}`)
 }))
 
 app.all("*", (req, res, next) => {
