@@ -3,26 +3,25 @@ const app = express();
 const path = require("path")
 const mongoose = require('mongoose');
 const ejsMate = require("ejs-mate");
-const {postJoiSchema, commentJoiSchema} = require("./schemas")
-const catchAsync = require("./utilities/catchAsync")
+// const {postJoiSchema, commentJoiSchema} = require("./schemas")
+// const catchAsync = require("./utilities/catchAsync")
 const ExpressError = require("./utilities/ExpressError")
 const methodOverride = require("method-override")
-const Post = require("./model/post")
-const Comment = require("./model/comment");
-const { comments } = require("./seeds/seedResources");
-console.info(Post)
+// const Post = require("./model/post")
+// const Comment = require("./model/comment");
+// const { comments } = require("./seeds/seedResources");
 
+const posts = require("./routes/posts")
+const comments = require("./routes/comments")
  
 mongoose.connect('mongodb://127.0.0.1:27017/postDB', { useNewUrlParser: true, useUnifiedTopology: true })
 .then(() => {
     console.log("CONNECTION OPEN!!!")
-
+ 
 })
 .catch(err => {
     console.log("OH NO ERROR!!!")
     console.log("not connected to database (ensure mongod is running in powershell)")
-
-    // console.log(err)
 })
 // ************************************ not the file connected to terminal// not updating
 app.engine("ejs", ejsMate)
@@ -33,39 +32,11 @@ app.set("views", path.join(__dirname, "/views"))
 app.use(express.urlencoded({ extended: true }))
 app.use(methodOverride("_method"));
 
-// Server-Side JOI validation middleware
-const validatePost = (req, res, next) => {
-    const {error} = postJoiSchema.validate(req.body);
-
-    if (error) {
-        const msg = error.details.map(el => el.message).join(",")
-        throw new ExpressError(msg, 400)
-    }
-    else {
-        next();
-    }
-} 
-
-
-const validateComments = (req, res, next) => {
-    const {error} = commentJoiSchema.validate(req.body);
-
-    if (error) {
-        const msg = error.details.map(el => el.message).join(",")
-        throw new ExpressError(msg, 400)
-        // res.send(error)
-    }
-    else {
-        next();
-    }
-} 
-
-
+app.use("/posts", posts)
+app.use("/posts/:id/comments", comments)
 
 app.get("/", (req, res) => {
         res.render("home.ejs")
-        // res.render("../../views/home.ejs")
-
 })
 
 app.get("/login", (req, res) => {
@@ -86,85 +57,9 @@ app.get("/search", (req, res) => {
     res.send(`page the of user ${req.query.q}`)
 })
 
-
-app.get("/posts", async (req, res) => {
-    const posts = await Post.find({});
-    res.render("posts/gallery", { posts } )
-})
-
-app.get("/posts/create", (req, res) => {
-    res.render("posts/create")
-})
-
-app.post("/posts", validatePost, catchAsync(async (req, res) => {
-    
-    const post = new Post(req.body.post)
-    await post.save();
-    res.redirect(`posts/${post._id}`)
-}))
-
-app.get("/posts/:id", catchAsync(async (req, res) => {
-    const post = await Post.findById(req.params.id).populate("comments")
-    // console.log(post.comments)
-    // experiment
-        // const comments = await Comment.findById(post)
-
-    // experiment
-    res.render("posts/select", {post})
-}))
-
-app.get("/posts/:id/edit", catchAsync(async (req, res) => {
-    const post = await Post.findById(req.params.id)
-    res.render("posts/edit", {post})
-}))
-
-app.put("/posts/:id", validatePost, catchAsync(async (req, res) => {
-    const { id } = req.params;
-    const post = await Post.findByIdAndUpdate(id, { ...req.body.post});
-    res.redirect(`/posts/${post._id}`) 
-}))
-
-
-app.delete("/posts/:id", catchAsync(async (req, res) => {
-    const { id } = req.params;
-    await Post.findByIdAndDelete(id)
-    res.redirect(`/posts`) 
-}))
-
-
-app.post("/posts/:id/comments", validateComments, catchAsync(async (req, res) => {
-    const post = await Post.findById(req.params.id)
-    const comment = new Comment(req.body.comment)
-    post.comments.push(comment)
-    await comment.save()
-    await post.save()
-    // console.log(comment.text)
-    res.redirect(`/posts/${post._id}`)
-}))
-
-// app.delete("/posts/:id/comments/:commentId", catchAsync(async (req, res) => {   
-//     const { id, commentId } = req.params
-//     await Post.findByIdAndUpdate(id, {$pull: {comments: commentId}})
-//     await Comment.findByIdAndDelete(commentId)
-
-//     res.redirect(`/posts/${id}`)
-// }))
-
-app.delete("/posts/:id/comments/:commentId", catchAsync(async (req, res) => {
-    const { id, commentId } = req.params;
-    const apost = await Post.findById("64540ea021489eb4e0f4e524") 
-
-    await Post.findByIdAndUpdate(id, { $pull: { comments: commentId } });
-    await Comment.findByIdAndDelete(commentId);
-    res.redirect(`/posts/${id}`);
-    // res.send(`|${id} |${commentId}`)
-}))
-
 app.all("*", (req, res, next) => {
-    // res.send("404")
     next(new ExpressError("Page Not Found!", 404))
 })
-
 
 app.use((err, req, res, next) => {
     const { statusCode = 500} = err;

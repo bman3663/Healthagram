@@ -2,8 +2,11 @@
    
     module.exports.postJoiSchema = Joi.object({
         post: Joi.object({
+            description: Joi.string(),
             caption: Joi.string().required(),
-            image: Joi.string().required()
+            image: Joi.string().required(),
+            likes: Joi.number(),
+            comments: Joi.array()
         }).required()
     })
 
