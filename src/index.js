@@ -3,6 +3,8 @@ const app = express();
 const path = require("path")
 const mongoose = require('mongoose');
 const ejsMate = require("ejs-mate");
+const session = require("express-session")
+const flash = require("connect-flash")
 // const {postJoiSchema, commentJoiSchema} = require("./schemas")
 // const catchAsync = require("./utilities/catchAsync")
 const ExpressError = require("./utilities/ExpressError")
@@ -31,6 +33,27 @@ app.set("views", path.join(__dirname, "/views"))
 
 app.use(express.urlencoded({ extended: true }))
 app.use(methodOverride("_method"));
+app.use(express.static(path.join(__dirname, "public")))
+
+const sessionConfig = {
+    secret: "sketchysecret",
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+        httpOnly: true,
+        expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
+        maxAge: 1000 * 60 * 60 * 24 * 7
+    }
+}
+
+app.use(session(sessionConfig))
+app.use(flash())
+
+app.use((req, res, next) => {
+    res.locals.success = req.flash("success")
+    res.locals.failure = req.flash("failure")
+    next()
+})
 
 app.use("/posts", posts)
 app.use("/posts/:id/comments", comments)

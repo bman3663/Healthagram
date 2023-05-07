@@ -33,28 +33,41 @@ router.get("/create", (req, res) => {
 router.post("/", validatePost, catchAsync(async (req, res) => {
     const post = new Post(req.body.post)
     await post.save();
+    req.flash("success", "Successfully made a new post")
     res.redirect(`posts/${post._id}`)
 }))
 
 router.get("/:id", catchAsync(async (req, res) => {
     const post = await Post.findById(req.params.id).populate("comments")
+    if (!post) {
+    req.flash("failure", "Cannot find that post")
+    return res.redirect("/posts")
+    }
+
     res.render("posts/select", {post})
 }))
 
 router.get("/:id/edit", catchAsync(async (req, res) => {
     const post = await Post.findById(req.params.id)
+    if (!post) {
+    req.flash("failure", "Cannot find that post")
+    return res.redirect("/posts")
+    }
     res.render("posts/edit", {post})
 }))
 
 router.put("/:id", validatePost, catchAsync(async (req, res) => {
     const { id } = req.params;
     const post = await Post.findByIdAndUpdate(id, { ...req.body.post});
+    req.flash("success", "Successfully updated post")
+
     res.redirect(`/posts/${post._id}`) 
 }))
 
 router.delete("/:id", catchAsync(async (req, res) => {
     const { id } = req.params;
     await Post.findByIdAndDelete(id)
+    req.flash("success", "Successfully deleted post")
     res.redirect(`/posts`) 
 }))
 
