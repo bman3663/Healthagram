@@ -9,12 +9,16 @@ const flash = require("connect-flash")
 // const catchAsync = require("./utilities/catchAsync")
 const ExpressError = require("./utilities/ExpressError")
 const methodOverride = require("method-override")
+const passport = require("passport")
+const localStrategy = require("passport-local")
+const User = require("./model/user")
 // const Post = require("./model/post")
 // const Comment = require("./model/comment");
 // const { comments } = require("./seeds/seedResources");
 
-const posts = require("./routes/posts")
-const comments = require("./routes/comments")
+const postRoutes = require("./routes/posts")
+const commentRoutes = require("./routes/comments")
+const userRoutes = require("./routes/users")
  
 mongoose.connect('mongodb://127.0.0.1:27017/postDB', { useNewUrlParser: true, useUnifiedTopology: true })
 .then(() => {
@@ -48,6 +52,11 @@ const sessionConfig = {
 
 app.use(session(sessionConfig))
 app.use(flash())
+app.use(passport.initialize())
+app.use(passport.session())
+passport.use(new localStrategy(User.authenticate()))
+passport.serializeUser(User.serializeUser())
+passport.deserializeUser(User.deserializeUser())
 
 app.use((req, res, next) => {
     res.locals.success = req.flash("success")
@@ -55,30 +64,28 @@ app.use((req, res, next) => {
     next()
 })
 
-app.use("/posts", posts)
-app.use("/posts/:id/comments", comments)
+app.use("/", userRoutes)
+app.use("/posts", postRoutes)
+app.use("/posts/:id/comments", commentRoutes)
+
 
 app.get("/", (req, res) => {
         res.render("home.ejs")
 })
 
-app.get("/login", (req, res) => {
-    console.log("login page request")
-    res.render("login")
-})
+// app.get("/login", (req, res) => {
+//     console.log("login page request")
+//     res.render("login")
+// })
 
-app.get("/signup", (req, res) => {
-    console.log("signup page request")
-    res.render("signup")
-})
 
-app.get("/user/:username", (req, res) => {
-    res.send(`page of user ${req.params.username}`)
-})
+// app.get("/user/:username", (req, res) => {
+//     res.send(`page of user ${req.params.username}`)
+// })
 
-app.get("/search", (req, res) => {
-    res.send(`page the of user ${req.query.q}`)
-})
+// app.get("/search", (req, res) => {
+//     res.send(`page the of user ${req.query.q}`)
+// })
 
 app.all("*", (req, res, next) => {
     next(new ExpressError("Page Not Found!", 404))
