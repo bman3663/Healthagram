@@ -60,7 +60,7 @@ passport.deserializeUser(User.deserializeUser())
 
 app.use((req, res, next) => {
     res.locals.success = req.flash("success")
-    res.locals.failure = req.flash("failure")
+    res.locals.error = req.flash("error")
     next()
 })
 
@@ -72,11 +72,6 @@ app.use("/posts/:id/comments", commentRoutes)
 app.get("/", (req, res) => {
         res.render("home.ejs")
 })
-
-// app.get("/login", (req, res) => {
-//     console.log("login page request")
-//     res.render("login")
-// })
 
 
 // app.get("/user/:username", (req, res) => {

@@ -40,7 +40,7 @@ router.post("/", validatePost, catchAsync(async (req, res) => {
 router.get("/:id", catchAsync(async (req, res) => {
     const post = await Post.findById(req.params.id).populate("comments")
     if (!post) {
-    req.flash("failure", "Cannot find that post")
+    req.flash("error", "Cannot find that post")
     return res.redirect("/posts")
     }
 
@@ -50,7 +50,7 @@ router.get("/:id", catchAsync(async (req, res) => {
 router.get("/:id/edit", catchAsync(async (req, res) => {
     const post = await Post.findById(req.params.id)
     if (!post) {
-    req.flash("failure", "Cannot find that post")
+    req.flash("error", "Cannot find that post")
     return res.redirect("/posts")
     }
     res.render("posts/edit", {post})
