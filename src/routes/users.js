@@ -2,6 +2,7 @@ const express = require("express")
 const router = express.Router()
 const catchAsync = require("../utilities/catchAsync")
 
+const { storeReturnTo } = require('../middleware');
 
 const User = require("../model/user")
 const passport = require("passport")
@@ -21,8 +22,12 @@ router.post("/signup", catchAsync(async (req, res) => {
         const user = new User({username, email})
         const regUser = await User.register(user, password)
         // console.log(regUser)
-        req.flash("success", "Account Created, Welcome to Healthagram")
-        res.redirect("posts")
+        req.login(regUser, err => {
+            if(err) return next(err);
+                req.flash("success", "Account Created, Welcome to Healthagram")
+                res.redirect("posts")
+        })
+       
     }
     catch(e) {
         req.flash("error", e.message)
@@ -35,16 +40,28 @@ router.post("/signup", catchAsync(async (req, res) => {
 router.get("/login", (req, res) => {
     res.render("users/login")
 })
-// , successFlash: true, successRedirect: "/posts"
-router.post("/login", passport.authenticate("local", { failureFlash: true, failureRedirect: "/login" }), (req, res) => {
-    console.log("listo")
+router.post("/login",storeReturnTo, passport.authenticate("local", { failureFlash: true, failureRedirect: "/login" }), (req, res) => {
     req.flash("success", "Welcome Home!")
-    res.redirect("posts")
+    const redirectUrl = res.locals.returnTo || '/campgrounds';
+    res.redirect(redirectUrl)
+})
+
+
+router.get("/logout", (req, res) => {
+
+    req.logout(function (err) {
+        if (err) {
+            return next(err);
+        }
+        req.flash("success", "You are now logged out")
+        res.redirect("posts")
+    });
+
 
 })
 
 
-
+ 
 
 module.exports = router;
 

@@ -3,8 +3,11 @@ const router = express.Router()
 
 const catchAsync = require("../utilities/catchAsync")
 const { postJoiSchema } = require("../schemas")
+const { isLoggedIn } = require("../middleware")
+
 const ExpressError = require("../utilities/ExpressError")
 const Post = require("../model/post")
+
 
 
 // Server-Side JOI validation middleware
@@ -26,11 +29,11 @@ router.get("/", async (req, res) => {
     res.render("posts/gallery", { posts } )
 })
 
-router.get("/create", (req, res) => {
+router.get("/create", isLoggedIn, (req, res) => {
     res.render("posts/create")
 })
 
-router.post("/", validatePost, catchAsync(async (req, res) => {
+router.post("/", validatePost, isLoggedIn, catchAsync(async (req, res) => {
     const post = new Post(req.body.post)
     await post.save();
     req.flash("success", "Successfully made a new post")
