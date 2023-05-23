@@ -180,7 +180,8 @@ const swiper = async () => {
        description: prop.description,
       caption: prop.caption,
       likes: prop.likes,
-      image: prop.image
+      image: prop.image,
+      author: "6465d3d8cf5683de3db86dec"
     })
       await sigmaSeed.save()
   }

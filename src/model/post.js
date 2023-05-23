@@ -7,10 +7,14 @@ const postSchema = new Schema({
     likes: Number,
     description: String,
     image: String,
+    author: {
+        type: Schema.Types.ObjectId,
+        ref: "User"
+    },
     comments: [
         {
-        type: Schema.Types.ObjectId,
-        ref: "Comment"
+            type: Schema.Types.ObjectId,
+            ref: "Comment"
         }
     ]
 

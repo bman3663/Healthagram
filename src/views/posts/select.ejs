@@ -8,15 +8,26 @@
         <ul>
             <li><a href="/posts/create">Create A Post</a></li>
             <li><a href="/posts">Goto Gallery</a></li>
-            <li><a href="/posts/<%= post._id %>/edit">Edit This Post</a></li>
 
 
         </ul>  
     </div>
+
+    <% if (currentUser && post.author.id == currentUser._id) {  %>
+
     <div>
+        <button><a href="/posts/<%= post._id %>/edit">Edit This Post</a></button>
+
         <form action="/posts/<%= post._id %>?_method=DELETE" method="post">
             <button>Delete Post</button>
         </form>
+    </div>
+    <% } %>
+
+
+     <div>
+        <h2>Author</h2>
+        <p><%= post.author.username  %></p>
     </div>
     <div>
         <h2>Caption</h2>
@@ -28,10 +39,16 @@
     <% for (let comment of post.comments) { %>
                 <li>
                     <div>
-                    <%= comment.text  %> 
+                    <h2>Author:</h2> <%= comment.author.username %>
+                    <h2>Comment:</h2><%= comment.text  %> 
+
+                    <% if (currentUser && comment.author.id == currentUser._id) {  %>
+
                     <form action="/posts/<%= post._id %>/comments/<%= comment._id %>?_method=DELETE" method="post">
                         <button>Delete Comment</button>
                     </form>
+                    <% } %>
+
                     </div>
                 </li>
     <% } %>
@@ -41,6 +58,7 @@
     <h2>Image</h2>
     <img src="<%= post.image %>" alt="">
     </div>
+    <% if (currentUser) { %>
     <div>
         <form action="/posts/<%= post._id %>/comments" method="post">
 
@@ -52,5 +70,6 @@
             <input type="submit" value="Submit">
         </form>
     </div>
+    <% } %>
 
     

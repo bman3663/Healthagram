@@ -1,38 +1,29 @@
 const express = require("express")
 const router = express.Router({mergeParams: true})
+const { validateComments, isLoggedIn, isCommentAuthor } = require("../middleware")
 
-const catchAsync = require("../utilities/catchAsync")
-const { commentJoiSchema } = require("../schemas")
-const ExpressError = require("../utilities/ExpressError")
+// const { commentJoiSchema } = require("../schemas")
+// const ExpressError = require("../utilities/ExpressError")
 const Post = require("../model/post")
 const Comment = require("../model/comment");
+const catchAsync = require("../utilities/catchAsync")
 
-const validateComments = (req, res, next) => {
-    const {error} = commentJoiSchema.validate(req.body);
 
-    if (error) {
-        const msg = error.details.map(el => el.message).join(",")
-        throw new ExpressError(msg, 400)
-        // res.send(error)
-    }
-    else {
-        next();
-    }
-} 
-
-router.post("/", validateComments, catchAsync(async (req, res) => {
+router.post("/", isLoggedIn, validateComments, catchAsync(async (req, res) => {
     const post = await Post.findById(req.params.id)
     const comment = new Comment(req.body.comment)
-    console.log(post)
+    comment.author = req.user._id
+    // console.log(post)
     post.comments.push(comment)
     await comment.save()
     await post.save()
     req.flash("success", "Successfully Commented!")
+    console.log(comment)
 
     res.redirect(`/posts/${post._id}`)
 }))
 
-router.delete("/:commentId", catchAsync(async (req, res) => {
+router.delete("/:commentId", isLoggedIn, isCommentAuthor, catchAsync(async (req, res) => {
     const { id, commentId } = req.params;
     const apost = await Post.findById("64540ea021489eb4e0f4e524") 
     await Post.findByIdAndUpdate(id, { $pull: { comments: commentId } });
