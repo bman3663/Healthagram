@@ -32,6 +32,12 @@
     <div>
         <h2>Caption</h2>
         <p><%= post.caption  %></p>
+        <h2>Likes:</h2>
+        <p><%= post.likes %></p>
+        <form action="/posts/<%= post._id %>/like" method="post">
+                <button>like post</button>
+
+        </form>
     </div>
     <div>
     <h2>Comments</h2>

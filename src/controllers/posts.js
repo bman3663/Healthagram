@@ -53,6 +53,10 @@ module.exports.deletePost = async (req, res) => {
     req.flash("success", "Successfully deleted post")
     res.redirect(`/posts`) 
 }
-// module.exports.
-// module.exports.
-// module.exports.
+module.exports.like = async (req,res) => {
+    const {id} = req.params
+    const post = await Post.findById(id)
+    post.likes++;
+    await Post.updateOne(post)
+    res.redirect(`/posts/${id}`);
+}

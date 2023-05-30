@@ -21,6 +21,8 @@ router.route("/:id")
 
 router.get("/:id/edit", isLoggedIn, isAuthor, catchAsync(posts.renderEditForm))
 
+router.post("/:id/like", isLoggedIn, catchAsync(posts.like))
+
 
 
 module.exports = router;
