@@ -3,7 +3,9 @@ const { postJoiSchema } = require("./schemas")
 const ExpressError = require("./utilities/ExpressError")
 const Post = require("./model/post")
 const Comment = require("./model/comment")
+const User = require("./model/user")
 const { commentJoiSchema } = require("./schemas")
+
 
 
 
@@ -84,4 +86,18 @@ const validateComments = (req, res, next) => {
 } 
 
 
-module.exports = {storeReturnTo, validatePost, isLoggedIn, isAuthor, isCommentAuthor, validateComments}
+//adding current user to res local
+const getCurrentUser = async (req, res, next) => {
+//   if (req.session.userId) {
+//     try {
+//       const user = await User.findById(req.session.userId);
+//       res.locals.currentUser = user; // Add user to response locals
+//     } catch (err) {
+//       console.log('Error retrieving user:', err);
+//     }
+//   }
+//   next();
+};
+
+
+module.exports = {storeReturnTo, validatePost, isLoggedIn, isAuthor, isCommentAuthor, validateComments, getCurrentUser}

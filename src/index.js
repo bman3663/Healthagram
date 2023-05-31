@@ -12,6 +12,7 @@ const methodOverride = require("method-override")
 const passport = require("passport")
 const localStrategy = require("passport-local")
 const User = require("./model/user")
+// const getCurrentUser = require("./middleware")
 // const Post = require("./model/post")
 // const Comment = require("./model/comment");
 // const { comments } = require("./seeds/seedResources");
@@ -57,6 +58,9 @@ app.use(passport.session())
 passport.use(new localStrategy(User.authenticate()))
 passport.serializeUser(User.serializeUser())
 passport.deserializeUser(User.deserializeUser())
+
+// app.use(getCurrentUser); // Register the middleware
+
 
 app.use((req, res, next) => {
     res.locals.currentUser = req.user;

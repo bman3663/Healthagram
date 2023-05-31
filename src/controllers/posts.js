@@ -2,8 +2,15 @@ const Post = require("../model/post")
 
 
 module.exports.index = async (req, res) => {
-    const posts = await Post.find({});
-    res.render("posts/gallery", { posts } )
+    const posts = await Post.find({}).populate({
+    path: "comments",
+    populate: {
+        path: "author"
+    }}).populate({
+    path: "author",
+    select: "username"})
+    // console.log(req.user)
+    res.render("posts/gallery", { posts,req } )
 }
 
 module.exports.renderCreateForm = (req, res) => {

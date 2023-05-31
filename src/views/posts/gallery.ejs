@@ -9,21 +9,31 @@
         </ul>  
     </div>
 
+
     
     <div  class="mx-auto" style="width: 200px;">
         <ul>
             <% for (let item of posts) { %>
+
                 <li>
                 
                                     
                     <div class="card" style="width: 18rem;">
-                    <img class="card-img-top" src="<%= item.image  %>" alt="Card image cap">
+
+                    <div class="card-header ">
+                    <div class="row">
+                    <div class="col"><%= item.author.username %></div>
+                    <div class="col text-end"><%= (item._id.getTimestamp()).toLocaleDateString() %></div>
+                    </div>
+
+                    </div>
+                    <img class="img" src="<%= item.image  %>" alt="Card image cap">
                     <div class="card-body">
                         <h5 class="card-title"><%= item.caption  %></h5>
                         <p class="card-text">
                             <ul>
                             <% for (let comment of item.comments) { %>
-                                        <li><%= comment  %></li>
+                                        <li><%= comment.author.username  %>: <%= comment.text %></li>
                             <% } %>  
                             </ul>  
                         </p>

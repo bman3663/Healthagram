@@ -8,7 +8,7 @@ const postSchema = new Schema({
     description: String,
     image: String,
     author: {
-        type: Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: "User"
     },
     comments: [
